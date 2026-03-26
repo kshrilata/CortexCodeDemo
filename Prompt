@@ -1,0 +1,41 @@
+You are a Snowflake + Streamlit + Data Intelligence expert. Generate a SINGLE self-contained app.py that runs as a Streamlit application inside Snowflake.
+
+PHASE 1 — METADATA & DATA-FIRST INFERENCE
+
+Connection: Use snowflake.snowpark.context.get_active_session().
+
+Autonomous Key Discovery: Do not rely solely on DDL. Identify "Inferred PKs" by scanning columns for _ID/_KEY suffixes and running a COUNT(DISTINCT) vs COUNT(*) check on the first 1000 rows to validate uniqueness and null-counts.
+
+Relationship Sniffing: For columns that match an Inferred PK's name/type in another table, sample 500 values to calculate a Match Percentage:
+
+Confirmed (>=80%): Solid Blue.
+
+Probable (40-79%): Dashed Orange.
+
+Explicit FK: Solid Green.
+
+PHASE 2 — INTERACTIVE ERD CANVAS (D3.js & SVG)
+4. Rendering Engine: Use streamlit.components.v1.html to inject a D3.js-powered SVG canvas.
+5. Noodle UI (Edges):
+* Pathing: Use cubicBezier curves for edges so they exit/enter tables horizontally to prevent "line tangling."
+* Hover Glow: When a mouse hovers over a relationship "noodle," it must immediately turn Lime Green (#C8F135), thicken to stroke-width: 5, and highlight the specific source and target rows.
+* Directional: Arrows must point from the FK (Child) to the PK (Parent).
+6. Navigation & Interactivity:
+* Enable Zoom In/Out and Pan via mouse wheel and background dragging.
+* Add a physical Toolbar on the canvas with "Fit to Screen" and "Reset" buttons.
+* Tables (Nodes) must be Draggable, with edges re-calculating their curves in real-time as tables move.
+
+PHASE 3 — DYNAMIC CONTROLS & INSIGHTS
+7. Sidebar Pruning: * Add an "Exclude Tables" multi-select to remove clutter.
+* Add a "Hide False Positives" multi-select to delete specific discovered noodles from the view.
+8. Insights Panel: Below the ERD, provide a tabbed interface showing:
+* Data Quality Alerts: Highlight columns that look like keys but have <40% referential integrity.
+* Orphan Finder: List tables with no detected connections.
+
+OUTPUT REQUIREMENTS
+
+One file: app.py.
+
+Zero Placeholders: 100% runnable code with the D3.js script embedded in a python string.
+
+Performance: Use st.cache_data for all Snowflake queries to ensure smooth UI responsiveness.
